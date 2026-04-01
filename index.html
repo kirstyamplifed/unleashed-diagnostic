@@ -906,15 +906,24 @@
       size: document.getElementById("g-size").value
     };
     // ── CRM integration point ──────────────────────────────────────────────
-    // Replace the URL below with your HubSpot form endpoint, Mailchimp API,
-    // Zapier webhook, or any other endpoint to capture leads.
-    // Example with a Zapier webhook:
-    //
-    // const { dimScores, overall } = getScores();
-    // fetch("https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/", {
-    //   method: "POST",
-    //   body: JSON.stringify({ ...state.lead, overall, ...dimScores })
-    // });
+    const { dimScores, overall } = getScores();
+fetch("https://script.google.com/macros/s/AKfycbx73k05kqGzsGSkKvp_wQIh56qQz7g6X-VcPp-QtUzCanTbuAvaa7-EGN5YEwJWfkU/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    timestamp: new Date().toISOString(),
+    name: state.lead.name,
+    email: state.lead.email,
+    organisation: state.lead.org,
+    cohort_size: state.lead.size,
+    overall_score: overall,
+    feedback: dimScores.feedback,
+    psychological_safety: dimScores.safety,
+    goal_clarity: dimScores.goals,
+    conflict_management: dimScores.conflict,
+    development: dimScores.development
+  })
+});
     // ──────────────────────────────────────────────────────────────────────
     state.screen = "results";
     render();
