@@ -909,6 +909,7 @@
     const { dimScores, overall } = getScores();
 fetch("https://script.google.com/macros/s/AKfycbx73k05kqGzsGSkKvp_wQIh56qQz7g6X-VcPp-QtUzCanTbuAvaa7-EGN5YEwJWfkU/exec", {
   method: "POST",
+  mode: "no-cors",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     timestamp: new Date().toISOString(),
