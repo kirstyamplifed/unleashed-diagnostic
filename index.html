@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager Effectiveness Diagnostic — Unleashed</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1D9E75;
+      --teal-dark: #0F6E56;
+      --teal-deeper: #085041;
+      --teal-light: #E1F5EE;
+      --teal-mid: #9FE1CB;
+      --blue: #378ADD;
+      --blue-light: #E6F1FB;
+      --blue-dark: #0C447C;
+      --amber: #EF9F27;
+      --amber-light: #FAEEDA;
+      --amber-dark: #633806;
+      --red: #E24B4A;
+      --red-light: #FCEBEB;
+      --red-dark: #791F1F;
+      --purple: #7F77DD;
+      --purple-light: #EEEDFE;
+      --purple-dark: #3C3489;
+      --pink: #D4537E;
+      --pink-light: #FBEAF0;
+      --pink-dark: #72243E;
+      --gray-50: #F7F7F5;
+      --gray-100: #EFEFED;
+      --gray-200: #DEDEDB;
+      --gray-400: #9B9A93;
+      --gray-600: #5F5E5A;
+      --gray-800: #2C2C2A;
+      --white: #ffffff;
+      --text: #1a1a18;
+      --text-muted: #5F5E5A;
+      --text-light: #9B9A93;
+      --border: rgba(0,0,0,0.1);
+      --border-mid: rgba(0,0,0,0.15);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&display=swap');
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--teal-dark);
+      letter-spacing: -0.3px;
+    }
+    .logo span { color: var(--gray-400); font-weight: 400; font-size: 14px; margin-left: 10px; font-family: 'Inter', sans-serif; }
+    .header-right { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Main container ── */
+    .container {
+      flex: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Welcome screen ── */
+    .welcome-wrap { text-align: center; padding: 1rem 0 2rem; }
+    .welcome-eyebrow {
+      display: inline-block;
+      background: var(--teal-light);
+      color: var(--teal-deeper);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+    }
+    .welcome-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 1rem;
+    }
+    .welcome-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+    .dims-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .dim-pill {
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-mid);
+      background: var(--white);
+      color: var(--text-muted);
+    }
+    .meta-row {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .meta-item { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .meta-item svg { opacity: 0.5; }
+    .start-btn {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-block;
+    }
+    .start-btn:hover { background: var(--teal-dark); }
+    .start-btn:active { transform: scale(0.98); }
+
+    /* ── Progress ── */
+    .progress-wrap { margin-bottom: 2rem; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-label { font-size: 13px; color: var(--text-muted); }
+    .progress-dim {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--teal-dark);
+      background: var(--teal-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--gray-200);
+      border-radius: 2px;
+    }
+    .progress-fill {
+      height: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Question card ── */
+    .q-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .q-number {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+    .q-text {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.55;
+      margin-bottom: 2rem;
+      font-family: 'Fraunces', Georgia, serif;
+    }
+    .scale-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .scale-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--white);
+    }
+    .scale-option:hover {
+      border-color: var(--teal-mid);
+      background: var(--teal-light);
+    }
+    .scale-option.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+    .scale-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .scale-option.selected .scale-num {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--white);
+    }
+    .scale-lbl { font-size: 14px; color: var(--text); }
+    .scale-option.selected .scale-lbl { color: var(--teal-deeper); font-weight: 500; }
+
+    /* ── Nav ── */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-back {
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-md);
+      padding: 10px 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-back:hover { background: var(--gray-100); }
+    .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-next {
+      background: var(--teal);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 11px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-next:hover { background: var(--teal-dark); }
+    .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-next:active { transform: scale(0.98); }
+
+    /* ── Lead gate ── */
+    .gate-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .gate-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--teal-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .gate-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .gate-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .gate-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 380px;
+      margin: 0 auto 1.5rem;
+      text-align: left;
+    }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+    .form-input, .form-select {
+      padding: 11px 14px;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.1);
+    }
+    .form-input::placeholder { color: var(--text-light); }
+    .btn-submit {
+      width: 100%;
+      background: var(--teal);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 6px;
+      font-family: inherit;
+    }
+    .btn-submit:hover { background: var(--teal-dark); }
+    .gate-note { font-size: 12px; color: var(--text-light); }
+
+    /* ── Results ── */
+    .results-wrap { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .score-hero {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .dial-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+    .dial-wrap svg { width: 100%; height: 100%; }
+    .dial-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .dial-score { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+    .dial-denom { font-size: 11px; color: var(--text-light); }
+    .score-info-wrap { flex: 1; }
+    .score-greeting {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .score-heading {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .tier-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .tier-developing { background: var(--amber-light); color: var(--amber-dark); }
+    .tier-progressing { background: var(--blue-light); color: var(--blue-dark); }
+    .tier-strong { background: var(--teal-light); color: var(--teal-deeper); }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    .dim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .dim-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.1rem;
+    }
+    .dim-card-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+    .dim-bar-track {
+      height: 5px;
+      background: var(--gray-100);
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .dim-bar-fill {
+      height: 5px;
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+    .dim-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .dim-score { font-size: 13px; font-weight: 500; color: var(--text); }
+    .dim-flag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .flag-critical { background: var(--red-light); color: var(--red-dark); }
+    .flag-watch { background: var(--amber-light); color: var(--amber-dark); }
+    .flag-strength { background: var(--teal-light); color: var(--teal-deeper); }
+
+    .gap-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .gap-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .gap-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .gap-item:first-child { padding-top: 0; }
+    .gap-dot-wrap { padding-top: 4px; }
+    .gap-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-critical { background: var(--red); }
+    .dot-watch { background: var(--amber); }
+    .dot-strength { background: var(--teal); }
+    .gap-content {}
+    .gap-dim-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .gap-rec { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .cta-card {
+      background: var(--teal-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .cta-text-wrap {}
+    .cta-heading { font-size: 17px; font-weight: 500; color: var(--white); margin-bottom: 6px; }
+    .cta-sub { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .btn-cta {
+      background: var(--white);
+      color: var(--teal-dark);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .btn-cta:hover { background: var(--teal-light); }
+
+    .restart-wrap { text-align: center; padding-top: 0.5rem; }
+    .btn-restart {
+      background: none;
+      border: none;
+      font-size: 13px;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .container { padding: 1.5rem 1rem 3rem; }
+      .dim-grid { grid-template-columns: 1fr; }
+      .score-hero { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .cta-card { flex-direction: column; align-items: flex-start; }
+      .btn-cta { width: 100%; text-align: center; }
+      .meta-row { flex-direction: column; gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <header class="header">
+    <div class="logo">Unleashed <span>Leadership Diagnostic</span></div>
+    <div class="header-right" id="header-progress"></div>
+  </header>
+
+  <main class="container">
+    <div id="app"></div>
+  </main>
+
+  <footer class="footer">
+    © Unleashed Leadership · This diagnostic is confidential and for internal use only.
+  </footer>
+</div>
+
+<script>
+  const DIMENSIONS = [
+    { id: "feedback",    name: "Feedback culture",           color: "#1D9E75" },
+    { id: "safety",      name: "Psychological safety",       color: "#378ADD" },
+    { id: "goals",       name: "Goal clarity",               color: "#BA7517" },
+    { id: "conflict",    name: "Conflict management",        color: "#D4537E" },
+    { id: "development", name: "Development conversations",  color: "#7F77DD" }
+  ];
+
+  const QUESTIONS = [
+    { dim: "feedback",    text: "How consistently do managers in your organisation deliver specific, timely feedback — both positive and developmental?" },
+    { dim: "feedback",    text: "When a manager gives feedback, how often does it lead to visible behaviour change in the recipient?" },
+    { dim: "safety",      text: "How comfortable do team members feel raising concerns, challenging ideas, or admitting mistakes to their manager?" },
+    { dim: "safety",      text: "How effectively do managers respond when someone on their team makes an error or raises a difficult issue?" },
+    { dim: "goals",       text: "How clearly can the average employee in your organisation articulate their top three priorities and how those connect to business outcomes?" },
+    { dim: "goals",       text: "How well do managers translate organisational strategy into specific, meaningful goals for each team member?" },
+    { dim: "conflict",    text: "When conflict arises within or between teams, how effectively do managers address it directly rather than avoiding or escalating?" },
+    { dim: "conflict",    text: "How skilled are your managers at navigating difficult conversations — poor performance, competing priorities, interpersonal friction?" },
+    { dim: "development", text: "How regularly do managers hold structured career and development conversations beyond the immediate day-to-day work?" },
+    { dim: "development", text: "How well do managers understand the growth aspirations of each person on their team and actively create opportunities for development?" }
+  ];
+
+  const SCALE = [
+    { val: 1, label: "Very poorly" },
+    { val: 2, label: "Poorly" },
+    { val: 3, label: "Adequately" },
+    { val: 4, label: "Well" },
+    { val: 5, label: "Exceptionally" }
+  ];
+
+  const RECS = {
+    feedback: {
+      critical: "Feedback culture is your most urgent gap. Managers lack the skills or habits to give actionable feedback regularly. Without this foundation, all other development work is constrained.",
+      watch: "Feedback is inconsistent across your manager cohort. Some are strong; others avoid it. Standardising a simple feedback cadence could unlock significant performance uplift."
+    },
+    safety: {
+      critical: "Low psychological safety is creating invisible drag across your organisation — people aren't speaking up, mistakes go unaddressed, and innovation stalls. This requires direct intervention at the manager level.",
+      watch: "Psychological safety varies by team. Some pockets are strong; others still operate with a fear-adjacent dynamic. Targeted coaching for specific managers is likely needed."
+    },
+    goals: {
+      critical: "Goal clarity is a critical gap. When people don't understand their priorities or how they connect to the bigger picture, energy is wasted and accountability becomes impossible.",
+      watch: "Goal-setting is happening but not consistently translating to day-to-day clarity. A structured goal cadence with manager accountability could sharpen this quickly."
+    },
+    conflict: {
+      critical: "Conflict is going unmanaged. This is often the root cause of turnover, team dysfunction, and underperformance that's hard to attribute. Your managers need structured support here.",
+      watch: "Most conflict is being handled, but some managers are avoiding difficult conversations. Targeted skills development in this area would strengthen your leadership bench."
+    },
+    development: {
+      critical: "Development conversations are the missing link in your leadership model. Without them, high-potential employees will leave — not because of pay, but because they don't see a future.",
+      watch: "Development conversations are happening but aren't yet structured or consistent enough to drive meaningful retention and growth outcomes."
+    }
+  };
+
+  let state = { screen: "welcome", step: 0, answers: {}, lead: null };
+
+  function getScores() {
+    const dimScores = {};
+    DIMENSIONS.forEach(d => {
+      const qs = QUESTIONS.map((q, i) => q.dim === d.id ? state.answers[i] : null).filter(v => v !== null && v !== undefined);
+      dimScores[d.id] = qs.length ? Math.round((qs.reduce((a,b) => a+b, 0) / qs.length) * 20) : 0;
+    });
+    const overall = Math.round(Object.values(dimScores).reduce((a,b) => a+b, 0) / DIMENSIONS.length);
+    return { dimScores, overall };
+  }
+
+  function getTier(score) {
+    if (score < 50) return { label: "Developing", cls: "tier-developing" };
+    if (score < 70) return { label: "Progressing", cls: "tier-progressing" };
+    return { label: "Strong", cls: "tier-strong" };
+  }
+
+  function getFlag(score) {
+    if (score < 45) return { label: "Critical gap", cls: "flag-critical", dotCls: "dot-critical", recKey: "critical" };
+    if (score < 65) return { label: "Watch area",   cls: "flag-watch",    dotCls: "dot-watch",    recKey: "watch" };
+    return              { label: "Strength",        cls: "flag-strength", dotCls: "dot-strength", recKey: null };
+  }
+
+  function render() {
+    const app = document.getElementById("app");
+    const hp  = document.getElementById("header-progress");
+
+    if (state.screen === "welcome") {
+      hp.textContent = "";
+      app.innerHTML = `
+        <div class="welcome-wrap">
+          <span class="welcome-eyebrow">Free diagnostic tool</span>
+          <h1 class="welcome-title">How effective is your manager cohort, really?</h1>
+          <p class="welcome-sub">This 10-question diagnostic takes less than 5 minutes and gives you a Leadership Health Score across five dimensions. Used by Heads of People who want an honest baseline before deciding where to invest in their managers.</p>
+          <div class="dims-preview">
+            ${DIMENSIONS.map(d => `<span class="dim-pill">${d.name}</span>`).join("")}
+          </div>
+          <div class="meta-row">
+            <span class="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              5 minutes
+            </span>
+            <span class="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              10 questions
+            </span>
+            <span class="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Instant results
+            </span>
+          </div>
+          <button class="start-btn" onclick="startDiag()">Start the diagnostic →</button>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "question") {
+      const q = QUESTIONS[state.step];
+      const dim = DIMENSIONS.find(d => d.id === q.dim);
+      const progress = (state.step / QUESTIONS.length) * 100;
+      const selected = state.answers[state.step];
+      hp.textContent = `${state.step + 1} / ${QUESTIONS.length}`;
+
+      app.innerHTML = `
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span class="progress-label">Question ${state.step + 1} of ${QUESTIONS.length}</span>
+            <span class="progress-dim">${dim.name}</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number">Q${state.step + 1}</div>
+          <div class="q-text">${q.text}</div>
+          <div class="scale-wrap">
+            ${SCALE.map(s => `
+              <div class="scale-option${selected === s.val ? " selected" : ""}" onclick="selectAnswer(${s.val})">
+                <div class="scale-num">${s.val}</div>
+                <div class="scale-lbl">${s.label}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="nav-row">
+          <button class="btn-back" onclick="goBack()" ${state.step === 0 ? "disabled" : ""}>← Back</button>
+          <button class="btn-next" onclick="goNext()" ${selected === undefined ? "disabled" : ""}>
+            ${state.step === QUESTIONS.length - 1 ? "See my results →" : "Next →"}
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "gate") {
+      hp.textContent = "Almost there";
+      app.innerHTML = `
+        <div class="gate-card">
+          <div class="gate-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 class="gate-title">Your diagnostic is ready</h2>
+          <p class="gate-sub">Enter your details below to unlock your personalised Leadership Health Score — a full breakdown across all five dimensions with prioritised gap analysis.</p>
+          <div class="gate-form">
+            <div class="form-field">
+              <label class="form-label">Your name</label>
+              <input class="form-input" type="text" id="g-name" placeholder="e.g. Sarah Johnson" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Work email</label>
+              <input class="form-input" type="email" id="g-email" placeholder="sarah@company.com" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Organisation</label>
+              <input class="form-input" type="text" id="g-org" placeholder="Company name" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Manager cohort size</label>
+              <select class="form-select" id="g-size">
+                <option value="">Select...</option>
+                <option>1–5 managers</option>
+                <option>6–15 managers</option>
+                <option>16–50 managers</option>
+                <option>50+ managers</option>
+              </select>
+            </div>
+            <button class="btn-submit" onclick="submitGate()">View my Leadership Health Score →</button>
+          </div>
+          <p class="gate-note">Unleashed will send your full report to this email. No spam, ever.</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "results") {
+      const { dimScores, overall } = getScores();
+      const tier = getTier(overall);
+      const firstName = state.lead && state.lead.name ? state.lead.name.split(" ")[0] : "there";
+      const orgName = state.lead && state.lead.org ? state.lead.org : "your organisation";
+      const sortedDims = [...DIMENSIONS].sort((a,b) => dimScores[a.id] - dimScores[b.id]);
+      const gapDims = sortedDims.filter(d => dimScores[d.id] < 65);
+      const strongDims = DIMENSIONS.filter(d => dimScores[d.id] >= 70);
+      const circumference = 2 * Math.PI * 42;
+      const dashOffset = circumference * (1 - overall / 100);
+      const dialColor = overall < 50 ? "#EF9F27" : overall < 70 ? "#378ADD" : "#1D9E75";
+      hp.textContent = "Your results";
+
+      app.innerHTML = `
+        <div class="results-wrap">
+
+          <div class="score-hero">
+            <div class="dial-wrap">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#EFEFED" stroke-width="7"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="${dialColor}" stroke-width="7"
+                  stroke-dasharray="${circumference.toFixed(1)}" stroke-dashoffset="${dashOffset.toFixed(1)}"
+                  stroke-linecap="round" transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 1s ease;"/>
+              </svg>
+              <div class="dial-center">
+                <span class="dial-score">${overall}</span>
+                <span class="dial-denom">/100</span>
+              </div>
+            </div>
+            <div class="score-info-wrap">
+              <div class="score-greeting">Leadership Health Score for ${orgName}</div>
+              <div class="score-heading">Hi ${firstName}, here's where your managers stand.</div>
+              <span class="tier-badge ${tier.cls}">${tier.label}</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-label">Dimension breakdown</div>
+            <div class="dim-grid">
+              ${DIMENSIONS.map(d => {
+                const s = dimScores[d.id];
+                const flag = getFlag(s);
+                return `
+                  <div class="dim-card">
+                    <div class="dim-card-name">${d.name}</div>
+                    <div class="dim-bar-track">
+                      <div class="dim-bar-fill" style="width:${s}%; background:${d.color};"></div>
+                    </div>
+                    <div class="dim-bottom">
+                      <span class="dim-score">${s}/100</span>
+                      <span class="dim-flag ${flag.cls}">${flag.label}</span>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+
+          ${gapDims.length > 0 ? `
+            <div class="gap-card">
+              <div class="section-label">Prioritised gap analysis</div>
+              ${gapDims.map(d => {
+                const flag = getFlag(dimScores[d.id]);
+                const rec = RECS[d.id][flag.recKey];
+                return `
+                  <div class="gap-item">
+                    <div class="gap-dot-wrap"><div class="gap-dot ${flag.dotCls}"></div></div>
+                    <div class="gap-content">
+                      <div class="gap-dim-name">${d.name} <span style="font-weight:400; color:var(--text-muted); font-size:13px;">— ${dimScores[d.id]}/100</span></div>
+                      <div class="gap-rec">${rec}</div>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          ` : ""}
+
+          ${strongDims.length > 0 ? `
+            <div class="gap-card">
+              <div class="section-label">Strengths to build on</div>
+              ${strongDims.map(d => `
+                <div class="gap-item">
+                  <div class="gap-dot-wrap"><div class="gap-dot dot-strength"></div></div>
+                  <div class="gap-content">
+                    <div class="gap-dim-name">${d.name} <span style="font-weight:400; color:var(--text-muted); font-size:13px;">— ${dimScores[d.id]}/100</span></div>
+                    <div class="gap-rec">This is a genuine strength in your organisation. The priority is maintaining consistency as you scale and ensuring new managers are onboarded into the same culture.</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          ` : ""}
+
+          <div class="cta-card">
+            <div class="cta-text-wrap">
+              <div class="cta-heading">Ready to move the needle?</div>
+              <div class="cta-sub">Book a 30-minute call with the Unleashed team to walk through your results and explore what a targeted programme could look like for your manager cohort.</div>
+            </div>
+            <button class="btn-cta" onclick="window.open('https://unleashedleadership.com/contact', '_blank')">Book a call →</button>
+          </div>
+
+          <div class="restart-wrap">
+            <button class="btn-restart" onclick="restart()">Start over</button>
+          </div>
+
+        </div>
+      `;
+      return;
+    }
+  }
+
+  function startDiag() {
+    state.screen = "question";
+    state.step = 0;
+    render();
+  }
+
+  function selectAnswer(val) {
+    state.answers[state.step] = val;
+    render();
+  }
+
+  function goBack() {
+    if (state.step > 0) { state.step--; render(); }
+  }
+
+  function goNext() {
+    if (state.answers[state.step] === undefined) return;
+    if (state.step < QUESTIONS.length - 1) {
+      state.step++;
+      render();
+    } else {
+      state.screen = "gate";
+      render();
+    }
+  }
+
+  function submitGate() {
+    const name  = document.getElementById("g-name").value.trim();
+    const email = document.getElementById("g-email").value.trim();
+    if (!name || !email) { alert("Please enter your name and work email to continue."); return; }
+    state.lead = {
+      name,
+      email,
+      org:  document.getElementById("g-org").value.trim(),
+      size: document.getElementById("g-size").value
+    };
+    // ── CRM integration point ──────────────────────────────────────────────
+    // Replace the URL below with your HubSpot form endpoint, Mailchimp API,
+    // Zapier webhook, or any other endpoint to capture leads.
+    // Example with a Zapier webhook:
+    //
+    // const { dimScores, overall } = getScores();
+    // fetch("https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/", {
+    //   method: "POST",
+    //   body: JSON.stringify({ ...state.lead, overall, ...dimScores })
+    // });
+    // ──────────────────────────────────────────────────────────────────────
+    state.screen = "results";
+    render();
+  }
+
+  function restart() {
+    state = { screen: "welcome", step: 0, answers: {}, lead: null };
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
